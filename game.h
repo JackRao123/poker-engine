@@ -1,9 +1,23 @@
 #ifndef GAME_H // Include guard to prevent multiple inclusions
 #define GAME_H
- 
-// MyClass declaration
+  
 
- 
+#define NOT_DEALT -1
+#define TWO  0 
+#define THREE 1
+#define FOUR 2 
+#define FIVE 3 
+#define SIX 4 
+#define SEVEN 5 
+#define EIGHT 6 
+#define NINE 7 
+#define TEN 8  
+#define JACK 9 
+#define QUEEN 10 
+#define KING 11 
+#define ACE 12 
+#include <string>
+
 class Deck{
 public:
     std::vector<int> cards;
@@ -35,9 +49,7 @@ public:
     int handRanking(std::vector<int> sevenCards);
     int calculateWinner(std::vector<int> board);
 };
-
-
-
+ 
 bool royalFlush(std::vector<int> sevenCards);
 bool straightFlush(std::vector<int> sevenCards);
 bool fourOfAKind(std::vector<int> sevenCards);
