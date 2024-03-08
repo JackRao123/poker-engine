@@ -5,7 +5,7 @@
  
 void printArray(std::vector<int> arr){
     for(auto c: arr){
-        std::cout << c << " ";
+        std::cout << c%13 << " ";
     }
 
     std::cout << std::endl;

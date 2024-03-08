@@ -94,7 +94,7 @@ float monteCarlo(int iterations, function<bool(Deck&)> condition, int numThreads
 
 
 int main(){ 
-    Game g  =Game(4);
+    Game g  =Game(9);
     monteCarloGameWinner(g, 10);
     // cout<< Game::straightFlush({ ACE, TWO, THREE, FOUR, FIVE+13}) << endl;
 

@@ -11,7 +11,7 @@
 #include <set>
 #include "game.h"
 #include "helper.h"
-
+#include "ranking.h"
  
 std::map<int,std::string> Deck::suits = {
     {0, "♦️"},
@@ -55,59 +55,84 @@ Game::Game(int num_players): num_players(num_players){
 //10 = hcard
 
 
+ 
+//cardSet1.size() = cardSet2.size() = 7
+//returns true if cardset1 is better than cardset2
+bool Game::betterHand(std::vector<int> cardSet1, std::vector<int> cardSet2, bool & tied){
 
-int Game::handRanking(std::vector<int> sevenCards){
-    if(royalFlush(sevenCards)){
-        return 1;
+    std::vector<std::function<int(std::vector<int>)>> fxs = { royalFlush, straightFlush, fourOfAKind, fullHouse, flush, straight, threeOfAKind, twoPair, pair, highCard};//, highCardTiebreaker };
+    
+    for(int i=0; i<fxs.size(); i++){
+        std::function<int(std::vector<int>)> f = fxs[i];
+        
+        int res1 = f(cardSet1);
+        int res2 = f(cardSet2);
+
+        //if they both have something, then the one with the btter one wins.
+        //note - modify the functions in ranking.cpp so that two unique hands 
+        if(res1 != res2){
+            return res1 > res2;
+        }else if(res1 != 0){
+            //if they are acctually tied
+            tied = true;
+            return false;
+        }
     }
 
-    if(straightFlush(sevenCards)){
-        return 2;
-    }
-
-    if(fourOfAKind(sevenCards)){
-        return 3;
-    }
-
-    if(fullHouse(sevenCards)){
-        return 4;
-    }
-
-    if(flush(sevenCards)){
-        return 5;
-    }
-
-    if(straight(sevenCards)){
-        return 6;
-    }
-
-    if(threeOfAKind(sevenCards)){
-        return 7;
-    }
-
-    if(twoPair(sevenCards)){
-        return 8;
-    }
-
-    if(pair(sevenCards)){
-        return 9;
-    }
-
-    //high card.
-    return 10; 
+    
+    // return highCardTieBreaker(cardSet1, cardSet2, tied);
+    printArray(cardSet1);
+    printArray(cardSet2);
+    throw std::runtime_error("Should have returned" );
+    return false;
 }
 
 
 int Game::calculateWinner(std::vector<int> board){ 
     //return the index of the winner.
     std::vector<int> handRankings;
+    std::vector<std::vector<int>> sevenCardHands;
+    std::vector<std::set<int>> ties;
+    
     for(int i=0; i<num_players; i++){
         std::vector<int> sevenCards = board;
         sevenCards.push_back(players[i].card1);
-        sevenCards.push_back(players[i].card2);
-        
-        handRankings.push_back(handRanking(sevenCards));
+        sevenCards.push_back(players[i].card2); 
+        sevenCardHands.push_back(sevenCards);
+
+        handRankings.push_back(i);
     }
+     
+    //When this array is sorted, traversing it from the front to the end will give the index of the player with the best hand.  
+ 
+    std::sort(handRankings.begin(), handRankings.end(), [this, sevenCardHands, ties](const int &a, const int &b){
+        bool tied = false;
+        bool aIsBetter=  Game::betterHand(sevenCardHands[a], sevenCardHands[b], tied);
+
+        // if(tied){
+        //     bool found = false;
+        //     for(std::set<int> tieGroup: ties){
+        //         if(tieGroup.find(a) != tieGroup.end() || tieGroup.find(b) != tieGroup.end()){
+        //             tieGroup.insert(a);
+        //             tieGroup.insert(b);
+        //             found = true;
+        //             break;
+        //         }
+        //     }
+
+        //     if(!found){
+        //         ties.push_back({a,b});
+        //     }
+        // }
+
+        return aIsBetter;
+    });
+
+
+
+
+
+    ////////////////////////////////////////////////
 
     std::cout << "Board: ";
     for(auto c : board){

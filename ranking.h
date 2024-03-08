@@ -3,14 +3,16 @@
 #include <vector>
  
  
-bool royalFlush(std::vector<int> sevenCards);
-bool straightFlush(std::vector<int> sevenCards);
-bool fourOfAKind(std::vector<int> sevenCards);
-bool fullHouse(std::vector<int> sevenCards);
-bool flush(std::vector<int> sevenCards);
-bool straight(std::vector<int> sevenCards);
-bool threeOfAKind(std::vector<int> sevenCards);
-bool twoPair(std::vector<int> sevenCards);
-bool pair(std::vector<int> sevenCards);
+int royalFlush(std::vector<int> sevenCards);
+int straightFlush(std::vector<int> sevenCards);
+int fourOfAKind(std::vector<int> sevenCards);
+int fullHouse(std::vector<int> sevenCards);
+int flush(std::vector<int> sevenCards);
+int straight(std::vector<int> sevenCards);
+int threeOfAKind(std::vector<int> sevenCards);
+int twoPair(std::vector<int> sevenCards);
+int pair(std::vector<int> sevenCards);
+int highCard(std::vector<int> sevenCards);
+// bool highCardTieBreaker(std::vector<int> cardSet1, std::vector<int> cardSet2, bool & tied);
 
 #endif //RANKING_H
