@@ -38,10 +38,11 @@ std::map<int,std::string> Deck::ranks = {
    
  
 Game::Game(int num_players): num_players(num_players){
-    deck = Deck();
-    deck.shuffle();
-    
+    deck = Deck(); 
+}
 
+void Game::dealRandom(){
+    deck.shuffle();
     for(int i=0; i<num_players; i++){
         int c1 = deck.draw();
         int c2 = deck.draw();  
@@ -202,6 +203,53 @@ void Deck::dealSpecific(int card) {
         throw std::runtime_error("Card not found in the deck.");
     }
 }
+
+
+//user-input
+//2 3 4 5 6 7 8 9 T J Q K A
+//d c h s
+void Game::manualDeal(std::vector<std::vector<std::string>> startingHands){
+    std::map<char, int> suits = {{'d', 0}, {'c', 13}, {'h', 26}, {'s', 39}};
+   std::map<char, int> ranks = {
+    {'2', 0}, {'3', 1}, {'4', 2}, {'5', 3}, {'6', 4}, {'7', 5},
+    {'8', 6}, {'9', 7}, {'T', 8}, {'J', 9}, {'Q', 10}, {'K', 11}, {'A', 12}
+};
+
+    std::vector<int> usedCards;
+
+    int i = 0;
+    for(std::vector<std::string> hand: startingHands){
+        int c1 = ranks[hand[0][0]] + suits[hand[0][1]];
+        int c2 = ranks[hand[1][0]] + suits[hand[1][1]];
+        players.push_back(Player(c1,c2));
+
+        usedCards.push_back(c1);
+        usedCards.push_back(c2);
+
+        std::cout << "Player " << i << " dealt " <<Deck::cardToString(c1) <<" " << Deck::cardToString(c2) << std::endl;
+        i++;
+    }
+
+    this->deck.cards = {};
+
+    std::sort(usedCards.begin(), usedCards.end());
+
+    int usedIdx = 0;
+    for(int i =0; i<52; i++){
+        if(usedIdx < usedCards.size() &&  usedCards[usedIdx] == i){
+            if(usedIdx < usedCards.size() - 1 && usedCards[usedIdx] == usedCards[usedIdx+1]){
+                
+                std::string errorMsg = "Card already dealt: " + Deck::cardToString(usedCards[usedIdx]);  
+                throw std::runtime_error(errorMsg);
+            }
+            usedIdx++;
+            continue;
+        }else{
+            this->deck.cards.push_back(i);
+        }
+    }
+}
+
 
 Deck Deck::deepcopy(){
     Deck copy = Deck();

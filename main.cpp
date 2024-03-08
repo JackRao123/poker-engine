@@ -24,44 +24,58 @@
 // };
  
 using namespace std;
-//Monte carlo - figures out the equity of each hand.
-vector<float> monteCarloGameWinner(Game & g, int iterations, int numThreads = thread::hardware_concurrency()){
-    Deck copy; 
+//Monte carlo - figures out the equity of each hand?
+std::vector<float> monteCarloGameWinner(Game &g, int iterations, int numThreads = std::thread::hardware_concurrency()) {
+    std::vector<float> wins(g.num_players, 0);
 
-    vector<float> wins(g.num_players, 0);
+    // Thread FX
+    auto threadFunc = [&]() {
+        Deck copy;
 
-    for(int i=0; i<iterations; i++){
-        copy = g.deck.deepcopy(); 
-        copy.shuffle();
-        vector<int> board;
+        //Deal.
+        for (int i = 0; i < iterations / numThreads; i++) {
+            copy = g.deck.deepcopy();
+            copy.shuffle();
+            std::vector<int> board;
 
-        //Flop
-        board.push_back(copy.draw());
-        board.push_back(copy.draw());
-        board.push_back(copy.draw());
+            //Flop
+            board.push_back(copy.draw());
+            board.push_back(copy.draw());
+            board.push_back(copy.draw());
 
-        //Burn
-        copy.draw();
-        
-        //Turn
-        board.push_back(copy.draw());
-        
-        //Burn
-        copy.draw();
+            //Burn
+            copy.draw();
 
-        //River
-        board.push_back(copy.draw());
-        
-        int winner = g.calculateWinner(board);
+            //Turn
+            board.push_back(copy.draw());
 
-        wins[winner]++;
+            //Burn
+            copy.draw();
+
+            //River
+            board.push_back(copy.draw());
+
+            int winner = g.calculateWinner(board);
+            wins[winner]++;
+        }
+    };
+
+    // Threading
+    std::vector<std::thread> threads;
+    for (int i = 0; i < numThreads; ++i) {
+        threads.emplace_back(threadFunc);
     }
-    
-    for(int i=0; i<wins.size(); i++){
-        std::cout << i << " won " << wins[i] << " times = " << 100* wins[i]/iterations << "%.\n";
-    } 
 
-    return {};
+    //Wait for threads to done
+    for (auto& thread : threads) {
+        thread.join();
+    }
+ 
+    for (int i = 0; i < wins.size(); i++) {
+        std::cout << i << " won " << wins[i] << " times = " << 100 * wins[i] / iterations << "%.\n";
+    }
+
+    return wins;
 }
 
 //Monte carlo for a deck configuration - how many times will (condition) occur in a deck of 52 cards.
@@ -101,13 +115,31 @@ float monteCarlo(int iterations, function<bool(Deck&)> condition, int numThreads
     return static_cast<float>(successes) / static_cast<float>(iterations);
 }
 
+//todo
+//make cards assignable    //done
+//make seed assignable (reproducibility)
+//multithreading    //done
+//optimisation
 
 int main(){ 
+
     Game g  =Game(6);
-    monteCarloGameWinner(g, 10000);
+    // g.dealRandom();
+
+    g.manualDeal({
+        {"8d", "Jc"}, 
+        {"9d", "8s"}, 
+        {"3h", "Qs"}, 
+        {"5d", "7d"}, 
+        {"Kh", "Ks"}, 
+        {"7h", "Ac"}
+        });
+
+
+
+    monteCarloGameWinner(g, 100000);
     // cout<< Game::straightFlush({ ACE, TWO, THREE, FOUR, FIVE+13}) << endl;
-
-
+ 
     // cout << monteCarlo(10000000, Conditions::firstIsTwoDiamonds) <<endl;
     return 0;
 }

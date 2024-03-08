@@ -47,8 +47,10 @@ public:
     Deck deck;
     std::vector<Player> players; 
     Game(int num_players);
+    void dealRandom();
     bool betterHand(std::vector<int> cardSet1, std::vector<int> cardSet2, bool & tied);
     int calculateWinner(std::vector<int> board);
+    void manualDeal(std::vector<std::vector<std::string>> startingHands);
 };
  
 #endif //GAME_H

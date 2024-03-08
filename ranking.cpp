@@ -121,8 +121,7 @@ int flush(std::vector<int> sevenCards){
             } 
         }
     }
-
-
+ 
  
     // std::cout << "flushscore =  " <<flushScore <<std::endl;
     return flushScore;
