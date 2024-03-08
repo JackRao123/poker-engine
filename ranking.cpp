@@ -77,8 +77,8 @@ int fullHouse(std::vector<int> sevenCards){
     for(std::pair<int,int> p: rankCounter){
         if(p.second >= 3){
             if(p.first > bestTrips){
-                bestTrips = p.first;
                 bestPair = std::max(bestPair, bestTrips);
+                bestTrips = p.first;
             }else{
                 bestPair = std::max(bestPair, p.first);
             }
@@ -100,28 +100,32 @@ int fullHouse(std::vector<int> sevenCards){
 int flush(std::vector<int> sevenCards){
     std::map<int,int> suitCounter;
 
+    int flushScore = 0x0;
+    
+    //0b1111100000000 = AKQJT flush
+    //0b0000000011111 = 23456 flush
+
+
     for(auto c: sevenCards){
-        suitCounter[c/13]++;
+        suitCounter[c/13]++;   
+    }
 
-        if(suitCounter[c/13] >= 5){
-            //now we just find the card of the highest suit and return it.
-            //0 = no flush
-            //1 = 2-flush
-            //etc
-
-            int suit = c/13;
-            int highestFlushCard = 0;
+    for(std::pair<int,int> p: suitCounter){
+        if(p.second >=5){
+            int suit = p.first;
+            std::sort(sevenCards.begin(), sevenCards.end(), [](int a, int b){return a%13 > b%13;});
             for(auto card: sevenCards){
                 if(suit == card/13){
-                    highestFlushCard = std::max(highestFlushCard, card%13);
+                    flushScore = flushScore + (0x1<<(card%13)); 
                 }
-            }
-            
-            return highestFlushCard%13;
+            } 
         }
     }
 
-    return 0;
+
+ 
+    // std::cout << "flushscore =  " <<flushScore <<std::endl;
+    return flushScore;
 }
  
 int straight(std::vector<int> sevenCards){
@@ -188,13 +192,13 @@ int threeOfAKind(std::vector<int> sevenCards){
 
 int twoPair(std::vector<int> sevenCards){
     //when both people have two pair, whoever has the higher top pair wins
-    int bestPair= 0;
-    int secondBestPair = 0;
+    int bestPair= -1;
+    int secondBestPair = -1;
 
     std::sort(sevenCards.begin(), sevenCards.end(), [](int a, int b){return a%13 > b%13;});
     for(int i=0; i<sevenCards.size() -1; i++){
         if(sevenCards[i]%13 == sevenCards[i+1]%13){
-            if(bestPair ==0){
+            if(bestPair == -1){
                 bestPair = sevenCards[i]%13;
             }else{
                 secondBestPair = sevenCards[i]%13;
@@ -205,7 +209,7 @@ int twoPair(std::vector<int> sevenCards){
     }
 
     //no twopair
-    if(bestPair * secondBestPair ==0){
+    if(bestPair == -1 || secondBestPair == -1){
         return 0;
     }
    
@@ -218,8 +222,7 @@ int twoPair(std::vector<int> sevenCards){
     
     return bestPair*13*13  + secondBestPair*13 + sevenCards[0]%13;
 }
-
-
+ 
 int pair(std::vector<int> sevenCards){
     int bestPairRanking = 0; 
     std::sort(sevenCards.begin(), sevenCards.end(), [](int a, int b){return a%13 > b%13;});
@@ -260,6 +263,55 @@ int highCard(std::vector<int> sevenCards){
 
     return score;
 }
+
+
+
+
+void printHand(std::vector<int> sevenCards) {
+    if (royalFlush(sevenCards)) {
+        std::cout << "Royal flush: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (straightFlush(sevenCards)) {
+        std::cout << "Straight flush: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (fourOfAKind(sevenCards)) {
+        std::cout << "Four of a kind: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (fullHouse(sevenCards)) {
+        std::cout << "Full house: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (flush(sevenCards)) {
+        std::cout << "Flush: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (straight(sevenCards)) {
+        std::cout << "Straight: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (threeOfAKind(sevenCards)) {
+        std::cout << "Three of a kind: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (twoPair(sevenCards)) {
+        std::cout << "Two pair: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else if (pair(sevenCards)) {
+        std::cout << "Pair: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    } else {
+        std::cout << "High card: ";
+        printCards(sevenCards);
+        std::cout << std::endl;
+    }
+}
+
+
 
 // //Returns true if cardSet1 is better.
 // bool highCardTieBreaker(std::vector<int> cardSet1, std::vector<int> cardSet2, bool & tied){   

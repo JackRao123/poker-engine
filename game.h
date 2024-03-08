@@ -1,7 +1,6 @@
 #ifndef GAME_H // Include guard to prevent multiple inclusions
 #define GAME_H
-  
-
+   
 #define NOT_DEALT -1
 #define TWO  0 
 #define THREE 1
@@ -16,6 +15,8 @@
 #define QUEEN 10 
 #define KING 11 
 #define ACE 12 
+
+#include<map>
 #include <string>
 
 class Deck{

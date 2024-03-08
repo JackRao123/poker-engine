@@ -141,7 +141,13 @@ int Game::calculateWinner(std::vector<int> board){
     std::cout << std::endl;
 
 
-    std::cout << "Hand Rankings: ";
+    std::cout << "\nHand Rankings: \n";
+
+    for(int i=0; i<handRankings.size(); i++){
+        std::cout << handRankings[i] << " ";
+        printHand(sevenCardHands[handRankings[i]]);
+    }
+
     printArray(handRankings);
     std::cout << std::endl;
 

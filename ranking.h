@@ -15,4 +15,11 @@ int pair(std::vector<int> sevenCards);
 int highCard(std::vector<int> sevenCards);
 // bool highCardTieBreaker(std::vector<int> cardSet1, std::vector<int> cardSet2, bool & tied);
 
+
+//debug function
+
+void printHand(std::vector<int>sevenCards);
+
+
+
 #endif //RANKING_H
