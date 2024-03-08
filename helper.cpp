@@ -17,6 +17,7 @@ void printCards(std:: vector<int>arr){
     for(auto c: arr){
         std::cout << Deck::cardToString(c) << " ";
     }
+ 
 }
 
 bool contains(std::vector<int> array, int value){

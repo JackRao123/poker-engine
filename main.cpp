@@ -26,31 +26,40 @@
 using namespace std;
 //Monte carlo - figures out the equity of each hand.
 vector<float> monteCarloGameWinner(Game & g, int iterations, int numThreads = thread::hardware_concurrency()){
-    Deck copy = g.deck.deepcopy();
+    Deck copy; 
 
-    vector<int> wins(g.num_players, 0);
+    vector<float> wins(g.num_players, 0);
 
-    vector<int> board;
+    for(int i=0; i<iterations; i++){
+        copy = g.deck.deepcopy(); 
+        copy.shuffle();
+        vector<int> board;
 
-    //Flop
-    board.push_back(copy.draw());
-    board.push_back(copy.draw());
-    board.push_back(copy.draw());
+        //Flop
+        board.push_back(copy.draw());
+        board.push_back(copy.draw());
+        board.push_back(copy.draw());
 
-    //Burn
-    copy.draw();
+        //Burn
+        copy.draw();
+        
+        //Turn
+        board.push_back(copy.draw());
+        
+        //Burn
+        copy.draw();
+
+        //River
+        board.push_back(copy.draw());
+        
+        int winner = g.calculateWinner(board);
+
+        wins[winner]++;
+    }
     
-    //Turn
-    board.push_back(copy.draw());
-    
-    //Burn
-    copy.draw();
-
-    //River
-    board.push_back(copy.draw());
-    
-    g.calculateWinner(board);
-    
+    for(int i=0; i<wins.size(); i++){
+        std::cout << i << " won " << wins[i] << " times = " << 100* wins[i]/iterations << "%.\n";
+    } 
 
     return {};
 }
@@ -94,8 +103,8 @@ float monteCarlo(int iterations, function<bool(Deck&)> condition, int numThreads
 
 
 int main(){ 
-    Game g  =Game(22);
-    monteCarloGameWinner(g, 10);
+    Game g  =Game(6);
+    monteCarloGameWinner(g, 10000);
     // cout<< Game::straightFlush({ ACE, TWO, THREE, FOUR, FIVE+13}) << endl;
 
 

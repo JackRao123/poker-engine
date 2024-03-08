@@ -134,25 +134,26 @@ int Game::calculateWinner(std::vector<int> board){
 
     ////////////////////////////////////////////////
 
-    std::cout << "Board: ";
-    for(auto c : board){
-        std::cout << Deck::cardToString(c) << " ";
-    }
-    std::cout << std::endl;
+    // std::cout << "Board: ";
+    // for(auto c : board){
+    //     std::cout << Deck::cardToString(c) << " ";
+    // }
+    // std::cout << std::endl;
 
 
-    std::cout << "\nHand Rankings: \n";
+    // std::cout << "\nHand Rankings: \n";
 
-    for(int i=0; i<handRankings.size(); i++){
-        std::cout << handRankings[i] << " ";
-        printHand(sevenCardHands[handRankings[i]]);
-    }
+    // for(int i=0; i<handRankings.size(); i++){
+    //     std::cout << handRankings[i] << " ";
+    //     printHand(sevenCardHands[handRankings[i]]);
+    // }
 
-    printArray(handRankings);
-    std::cout << std::endl;
+    // printArray(handRankings);
+    // std::cout << std::endl;
+ 
 
-    //stub
-    return -1;
+    //handRankings is sorted in order of hand strength
+    return handRankings[0];
 }
  
 
