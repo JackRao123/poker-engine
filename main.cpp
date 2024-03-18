@@ -56,7 +56,8 @@ std::vector<float> monteCarloGameWinner(Game &g, int iterations, int numThreads 
             board.push_back(copy.draw());
 
             int winner = g.calculateWinner(board);
-            wins[winner]++;
+            wins[winner]++; 
+ 
         }
     };
 
@@ -120,20 +121,25 @@ float monteCarlo(int iterations, function<bool(Deck&)> condition, int numThreads
 //make seed assignable (reproducibility)
 //multithreading    //done
 //optimisation
+//account for draws
 
 int main(){ 
 
-    Game g  =Game(6);
+    Game g  =Game(2);
     // g.dealRandom();
 
     g.manualDeal({
-        {"8d", "Jc"}, 
-        {"9d", "8s"}, 
-        {"3h", "Qs"}, 
-        {"5d", "7d"}, 
-        {"Kh", "Ks"}, 
-        {"7h", "Ac"}
+        {"2c", "2s"},
+        {"Kh", "Kd"} 
         });
+    // g.manualDeal({
+    //     {"8d", "Jc"}, 
+    //     {"9d", "8s"}, 
+    //     {"3h", "Qs"}, 
+    //     {"5d", "7d"}, 
+    //     {"Kh", "Ks"}, 
+    //     {"7h", "Ac"}
+    //     });
 
 
 

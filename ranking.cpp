@@ -142,6 +142,7 @@ int straight(std::vector<int> sevenCards){
         }
     }   
 
+    
     int topStraightCard = 0;
 
     int straightSize = 1;

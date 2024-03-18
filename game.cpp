@@ -153,7 +153,7 @@ int Game::calculateWinner(std::vector<int> board){
     // std::cout << std::endl;
  
 
-    //handRankings is sorted in order of hand strength
+    //handRankings is sorted in order of hand strength 
     return handRankings[0];
 }
  
@@ -210,10 +210,11 @@ void Deck::dealSpecific(int card) {
 //d c h s
 void Game::manualDeal(std::vector<std::vector<std::string>> startingHands){
     std::map<char, int> suits = {{'d', 0}, {'c', 13}, {'h', 26}, {'s', 39}};
-   std::map<char, int> ranks = {
-    {'2', 0}, {'3', 1}, {'4', 2}, {'5', 3}, {'6', 4}, {'7', 5},
-    {'8', 6}, {'9', 7}, {'T', 8}, {'J', 9}, {'Q', 10}, {'K', 11}, {'A', 12}
-};
+    std::map<char, int> ranks = {{'2', 0}, {'3', 1}, {'4', 2}, {'5', 3}, {'6', 4}, {'7', 5}, {'8', 6}, {'9', 7}, {'T', 8}, {'J', 9}, {'Q', 10}, {'K', 11}, {'A', 12}};
+
+    if(startingHands.size() != this->num_players){
+        throw std::runtime_error("Number of players does not match number of specified hands to be dealt.");
+    }
 
     std::vector<int> usedCards;
 

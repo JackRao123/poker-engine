@@ -1,5 +1,5 @@
 CXX=clang++ # Use clang++ as the compiler
-CXXFLAGS=-g -std=c++17 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -Wall
+CXXFLAGS=-g -std=c++20 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -Wall
 LDFLAGS=-fsanitize=address -fsanitize=undefined
 EXEC=main
 SRC=$(wildcard *.cpp) # Assuming all your .cpp files are in the same directory
